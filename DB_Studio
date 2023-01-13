@@ -1,0 +1,132 @@
+-- Database: DB_StudioDeMusica
+
+-- DROP DATABASE IF EXISTS "DB_StudioDeMusica";
+
+/*
+CREATE DATABASE "DB_StudioDeMusica"
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'Portuguese_Brazil.1252'
+    LC_CTYPE = 'Portuguese_Brazil.1252'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+*/
+
+create table Gravadora
+(
+	grav_cod		serial,
+	grav_nome		varchar(100),
+	grav_end		varchar(100),
+	constraint pk_grav primary key (grav_cod)
+);
+
+create table CD
+(
+	cd_cod					serial,
+	cd_grav_cod				int,
+	cd_nome					varchar(100),
+	cd_valor				numeric(7,2),
+	cd_data_lancamento		date,
+	constraint pk_cd primary key (cd_cod),
+	constraint fk_grav_cod foreign key (cd_grav_cod) references Gravadora (grav_cod)
+);
+
+create table Musica
+(
+	mus_cod			serial,
+	mus_cd_cod		int,
+	mus_nome		varchar(100),
+	mus_duracao		time,
+	mus_faixa		numeric(2),
+	constraint pk_mus primary key (mus_cod)
+);
+
+create table Autor
+(
+	aut_cod			serial,
+	aut_nome		varchar(100),
+	constraint pk_aut primary key (aut_cod)
+);
+
+create table Item_CD
+(
+	Item_cod_cd		serial,
+	item_mus_cod	int,
+	item_cd_cod		int,
+	constraint pk_item_cd primary key (item_cod_cd),
+	constraint fk_mus_cod foreign key (item_mus_cod) references Musica (mus_cod),
+	constraint fk_cd_cod foreign key (item_cd_cod) references CD (cd_cod)
+);
+
+create table Musica_Autor
+(
+	mus_aut_cod		serial,
+	aut_cod			int,
+	mus_cod			int,
+	constraint pk_mus_aut primary key (mus_aut_cod),
+	constraint fk_mus_cod foreign key (mus_cod) references Musica (mus_cod),
+	constraint fk_aut_cod foreign key (aut_cod) references Autor (aut_cod)
+);
+
+--Inserindo registros na tabela Gravadora
+
+insert into Gravadora (grav_nome, grav_end)
+values
+('Artist Alliance Recording','Rua Cristiano Olsen.Centro.Guarulhos'),
+('Independent Star Records','Rua Pereira Estéfano.Centro.Guarulho'),
+('RetroMix Records','Avenida Afonso Pena.Centro.Guarulhos'),
+('Record Player Label','Rua Frederico Moura.Centro.Guarulhos'),
+('Red Lightning Records','Rua da Imprensa.Centro.Guarulhos');
+
+--Inserindo registros na tabela CD
+
+insert into CD (cd_grav_cod, cd_nome, cd_valor, cd_data_lancamento)
+values
+(5,'Flores Rosas',10.00,'2021-10-25'),
+(3,'Verão',9.99,'2021-01-30'),
+(1,'Maresia',5.00,'2021-03-01'),
+(1,'Café',7.99,'2021-10-13'),
+(4,'Alvorada',10.00,'2021-07-06');
+
+--Inserindo registros na tabela musica
+
+insert into Musica (mus_cd_cod, mus_nome, mus_duracao, mus_faixa)
+values
+(3,'Luar Escuro','00:04:45',10),
+(1,'Aurora','00:03:07',01),
+(2,'Céu Azul','00:03:23',05),
+(5,'Seis da Manhã','00:02:55',08),
+(1,'Espinhos','00:04:30',02);
+
+--Inserindo registros na tabela Autor
+
+insert into Autor (aut_nome)
+values
+('Cristina Barros'),
+('Gabriel Vicente'),
+('Otavio Soares'),
+('Anna Beatriz'),
+('Andreia Luz');
+
+--Inserindo registros na tabela Item_CD
+
+insert into Item_CD (item_cd_cod, item_mus_cod)
+values
+(3,1),
+(1,2),
+(2,3),
+(5,4),
+(1,5);
+
+--Inserindo registros na tabela Musica_Autor
+
+insert into Musica_Autor (aut_cod, mus_cod)
+values
+(1,2),
+(1,5),
+(2,3),
+(3,4),
+(5,1);
+
+select * from autor;

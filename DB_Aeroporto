@@ -1,0 +1,81 @@
+-- Database: DB_Passagem
+
+-- DROP DATABASE IF EXISTS "DB_Passagem";
+/*
+CREATE DATABASE "DB_Passagem"
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'Portuguese_Brazil.1252'
+    LC_CTYPE = 'Portuguese_Brazil.1252'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+*/
+
+--Criando a tabela cliente.
+
+create table cliente
+(
+	cod_cli 		INT,
+	nome 			VARCHAR(40),
+	cpf 			VARCHAR(11) unique,
+	rua 			VARCHAR(30),
+	num 			VARCHAR(10),
+	bairro 			VARCHAR(30),
+	cidade 			VARCHAR(35),
+	uf 				VARCHAR(2),
+	cep 			VARCHAR(8),
+	Constraint pk_cliente primary key (cod_cli)
+);
+
+--Criando a tabela passagem.
+
+create table passagem
+(
+	num 			INT,
+	valor 			NUMERIC(5,2) NOT NULL,
+	poltrona 		INT NOT NULL,
+	data_compra 	DATE,
+	tipo_cartao 	INT,
+	num_cartao 		VARCHAR(30) NOT NULL,
+	cod_cli 		INT,
+	Constraint pk_passagem primary key (num),
+	Constraint fk_passagem_cli foreign key (cod_cli) references cliente(cod_cli)
+);
+
+--Criando a tabela rota.
+
+create table rota
+(
+	num_voo 		VARCHAR(30),
+	rota 			VARCHAR(30) NOT NULL,
+	num_passagem 	INT,
+	Constraint pk_rota primary key (num_voo),
+	Constraint fk_rota_pass foreign key (num_passagem) references passagem(num)
+);
+	
+--Inserindo registros na tabela cliente.
+
+INSERT INTO cliente VALUES 
+(1,'Eduardo José','87623434299','Rua A','100','Centro','Mogi das Cruzes','SP','09887987'),
+(2,'Jonas','87623434212','Rua B','100','Tatuapé','São Paulo','SP','23876987'),
+(3,'Maria','20923434299','Rua Cecilia','100','Centro','Rio de Janeiro','RJ','09887987'),
+(4,'Gabriel','98723434299','Rua Azul','100','Centro','Belo Horizonte','MG','09887987'),
+(5,'Rafaela','87623826299','Rua A','100','Centro','Mogi das Cruzes','SP','09887987');	
+	
+--Inserindo registros na tabela passagem.
+
+INSERT INTO passagem VALUES
+(1,150.00,10,'01-04-2011',1,'123456789',1),
+(2,500.00,45,'23-03-2011',3,'123456789',2),
+(3,200.00,30,'15-04-2011',2,'123456789',3),
+(4,250.00,01,'27-03-2011',2,'123456789',4),
+(5,140.00,23,'08-02-2011',1,'123456789',5);	
+	
+--Inserindo registros na tabela rota.	
+	
+INSERT INTO rota VALUES 
+(1,'São Paulo-Rio de Janeiro',1),
+(2,'Rio de Janeiro-Belo Horizonte',2),
+(3,'Belo Horizonte-São Paulo',3),
+(4,'Natal-São Paulo',4);		

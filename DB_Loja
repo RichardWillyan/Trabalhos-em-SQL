@@ -1,0 +1,73 @@
+-- Database: DB_Loja
+
+-- DROP DATABASE IF EXISTS "DB_Loja";
+
+/*
+CREATE DATABASE "DB_Loja"
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'Portuguese_Brazil.1252'
+    LC_CTYPE = 'Portuguese_Brazil.1252'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+*/
+
+create table Produto
+(
+	pro_codigo			int primary key,
+	pro_descricao		varchar(100) not null,		
+	pro_valor			numeric(9,2)
+);
+
+create table Marca
+(
+	mar_codigo			int primary key,
+	mar_descricao		varchar(100) not null
+);
+
+create table ProMar
+(
+	codigo			int primary key,
+	pro_codigo		int references Produto (pro_codigo),
+	pro_marca		int references Marca (mar_codigo)
+);
+
+
+insert into Produto values
+(1,'camisa',100.00),
+(2,'calça',250.00),
+(3,'saia',130.00);
+
+insert into Marca values
+(1,'LACOSTE'),
+(2,'ADIDAS');
+
+insert into ProMar values
+(1,1,1),
+(2,2,1),
+(3,2,2),
+(4,3,1);
+
+--Atualize as marcas que começam com a letra "L" por "BOSS".
+
+update Marca
+set mar_descricao='BOSS'
+where mar_descricao ilike 'L%';
+
+--Atualizar o valor em 10% do produto que tem como codigo numero 1
+
+update Produto
+set pro_valor=(pro_valor*1.10)
+where pro_codigo =1;
+
+--Selecione os produtos que possuem os valores '100.00 e 250.00'
+
+select * 
+from Produto
+where pro_valor>= 100 and pro_valor <=250;
+
+select *
+from Produto
+where pro_valor between 100 and 250;
+
