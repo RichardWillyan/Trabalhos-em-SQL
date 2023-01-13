@@ -1,0 +1,177 @@
+/*
+Trabalho de Modelagem de dados aula_09
+2°Turno
+Nome:Richard Willyan Soares de Oliveira 
+Nome:Rodrigo Medrado Rosa				
+Nome:Filipe Antonio de Oliveira Bega    
+*/
+
+-- Database: DB_Escola
+
+-- DROP DATABASE IF EXISTS "DB_Escola";
+
+/*
+CREATE DATABASE "DB_Escola"
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'Portuguese_Brazil.1252'
+    LC_CTYPE = 'Portuguese_Brazil.1252'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
+*/
+
+--Criando a tabela Aluno
+
+create table Aluno
+(
+	cod_aluno		int not null,
+	rgm				numeric(9)not null,
+	nome			varchar(100)not null,
+	idade			numeric(2)not null,
+	situacao		varchar(100),
+	constraint pk_aluno primary key (cod_aluno)  
+);
+
+--Criando a tabela Diciplina
+
+create table Diciplina
+(
+	codigo		int not null,
+	nome		varchar(100) not null,
+	media		numeric(10)not null,
+	constraint pk_disc primary key (codigo)
+);
+
+--Criando a tabela Notas
+
+create table Notas
+(
+	cod_notas		int not null,
+	cod_aluno		int not null,
+	cod_disc		int not null,
+	p1				numeric(2) not null,
+	p2				numeric(2) not null,
+	media			numeric(3,1) not null,
+	faltas			numeric(2) not null,
+	constraint pk_notas primary key (cod_notas),
+	constraint fk_cod_aluno foreign key (cod_aluno) references Aluno (cod_aluno),
+	constraint fk_cod_disc foreign key (cod_disc) references Diciplina (codigo)
+);
+
+--Inserindo dados na tabela Aluno
+
+insert into Aluno values 
+(1,482647814,'Ana Maria Cruz Rocha',54,'Aprovada'),
+(2,306280255,'Caique Ferreira Cruz',28,'Em análise'),
+(3,365596589,'Ana Beatriz de Oliveira',19,'Aprovada'),
+(4,228923372,'Anastácia Ferreira Cruz',26,'Em análise'),
+(5,462232657,'Ailton Neves Soares',23,'Reprovado');
+
+--Inserindo dados na tabela Diciplina
+
+insert into Diciplina values
+(1,'Matemática',7),
+(2,'Português',7),
+(3,'História',6),
+(4,'Filosofia',5),
+(5,'Geografia',6);
+
+--Inserindo dados na tabela Notas
+
+insert into Notas values
+(1,5,1,5,4,4.5,11),
+(2,3,2,9,10,9.5,7),
+(3,4,5,6,6,6,5),
+(4,1,4,7,8,7.5,2),
+(5,2,3,8,9,8.5,11);
+
+--3) Atualizar o campo situacao, da tabela Alunos para "Aluno começado com Ana".
+
+Update Aluno
+set situacao = 'Alunos começado com Ana'
+where nome ilike 'Ana%';
+
+--3)Verificar a atualização.
+
+select *
+from Aluno
+where situacao = 'Alunos começado com Ana';
+
+--4)Atualizar as faltas dos alunos (na tabela notas), para uma falta a mais.
+
+ Update Notas
+ set faltas = (faltas+1);
+
+--4)Verificar as atualizações.
+
+ Select *
+ from Notas;
+
+--5)Atualizar o numero de faltas(da tabela Notas) para 9, somente dos alunos
+--que tiverem a media maior que 6 e faltas menor que 10.
+
+ Update Notas
+ set faltas = '9'
+ where media >=6 and faltas <=10;
+
+--5)Verificar as atualizações.
+
+ Select *
+ from Notas
+ where faltas = '9';
+
+--6)Atualizar a situação (na tabela Aluno) dos alunos que possuem
+--idade entre 18 e 25 para "Aluno potencial".
+
+ update Aluno
+ set situacao = 'Aluno potencial'
+ where idade between 18 and 25;
+
+--6)Verificar as atualizações.
+
+ select *
+ from Aluno
+ where situacao = 'Aluno potencial';
+ 
+--7)Atualizar a situação do Aluno para "em avaliação" 
+--caso ele tenha idade 23, 28, 54 ou 55.
+
+Update Aluno 
+set situacao = 'Em avaliação' 
+where idade =23 or idade =28 or idade =54 or idade =55;
+
+--7)Verificar as atualizações.
+
+Select * 
+from Aluno 
+where situacao = 'Em avaliação'; 
+
+--8)Atualizar a situação dos alunos para "tem as letras AI no nome" caso ele 
+--possua no nome as letras "ai" seguidas (não importa em que parte do nome).
+
+Update Aluno 
+set situacao = 'Tem as letras AI no nome' 
+where nome ilike '%ai%';
+
+--Verificar as atualizações.
+
+Select * 
+from Aluno 
+where situacao = 'Tem as letras AI no nome';
+
+--9)Atualizar a situação dos alunos para "idade ideal" caso o aluno tenha
+--entre 23 ou 26.
+
+Update Aluno 
+set situacao = 'Idade ideal' 
+where idade =23 or idade =26;
+
+--9)Verificar as atualizações.
+
+Select * 
+from Aluno
+where situacao = 'Idade ideal';
+ 
+	
